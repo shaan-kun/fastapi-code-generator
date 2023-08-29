@@ -326,6 +326,8 @@ class OpenAPIParser(OpenAPIModelParser):
         if request:
             arguments.append(request)
 
+        arguments.sort(key=lambda arg: 0 if arg.default is None and arg.required is True else 1)
+
         positional_argument: bool = False
         for argument in arguments:
             if positional_argument and argument.required and argument.default is None:
