@@ -114,7 +114,7 @@ def generate_code(
     disable_timestamp: bool = False,
     generate_routers: Optional[bool] = None,
     specify_tags: Optional[str] = None,
-    route_class: str = None,
+    route_class: str | None = None,
 ) -> None:
     if not model_path:
         model_path = MODEL_PATH
@@ -151,7 +151,7 @@ def generate_code(
     results: Dict[Path, str] = {}
     code_formatter = CodeFormatter(PythonVersion.PY_38, Path().resolve())
 
-    template_vars: Dict[str, object] = {"info": parser.parse_info(), "RouteClass": route_class}
+    template_vars: Dict[str, object] = {"info": parser.parse_info()}
     visitors: List[Visitor] = []
 
     # Load visitors
@@ -211,6 +211,7 @@ def generate_code(
                 ):
                     template_vars["tag"] = tag.strip()
                     template = environment.get_template(str(relative_path))
+                    template_vars["RouteClass"] = route_class
                     result = template.render(template_vars)
                     router_path = Path("routers", router).with_suffix(".jinja2")
                     results[router_path] = code_formatter.format_code(result)
