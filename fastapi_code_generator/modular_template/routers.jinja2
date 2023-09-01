@@ -3,11 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ..dependencies import *
-{% if RouteClass is not None %}from gateway_tools import {{ RouteClass }}{% endif %}
+{% if RouteClass is not none %}from gateway_tools import {{ RouteClass }}{% endif %}
 
 router = APIRouter(
     tags=['{{tag}}'],
-    {% if RouteClass is not None %}route_class={{ RouteClass }},{% endif %}
+    {% if RouteClass is not none %}route_class={{ RouteClass }},{% endif %}
 )
 
 {% for operation in operations %}
