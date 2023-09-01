@@ -3,9 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ..dependencies import *
+from gateway_tools import ClientsRoute
 
 router = APIRouter(
-    tags=['{{tag}}']
+    tags=['{{tag}}'],
+    route_class=ClientsRoute,
     )
 
 {% for operation in operations %}
