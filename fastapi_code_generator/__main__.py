@@ -117,7 +117,8 @@ def generate_code(
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
     if generate_routers:
-        template_dir = BUILTIN_MODULAR_TEMPLATE_DIR
+        if not template_dir:
+            template_dir = BUILTIN_MODULAR_TEMPLATE_DIR
         Path(output_dir / "routers").mkdir(parents=True, exist_ok=True)
     if not template_dir:
         template_dir = BUILTIN_TEMPLATE_DIR
