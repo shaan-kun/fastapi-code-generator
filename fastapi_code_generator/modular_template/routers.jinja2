@@ -3,12 +3,12 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ..dependencies import *
-from gateway_tools import ClientsRoute
+from gateway_tools import {{ RouteClass }}
 
 router = APIRouter(
     tags=['{{tag}}'],
-    route_class=ClientsRoute,
-    )
+    {% if RouteClass is not None %}route_class={{ RouteClass }},{% endif %}
+)
 
 {% for operation in operations %}
 {% if operation.tags[0] == tag %}
