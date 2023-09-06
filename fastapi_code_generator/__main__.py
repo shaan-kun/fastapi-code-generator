@@ -56,6 +56,7 @@ def main(
         None, "--custom-visitor", "-c"
     ),
     disable_timestamp: bool = typer.Option(False, "--disable-timestamp"),
+    gateway: str = typer.Option(None, "--gateway"),
     route_class: str = typer.Option(None, "--route-class"),
 ) -> None:
     input_name: str = input_file.name
@@ -77,6 +78,7 @@ def main(
             disable_timestamp=disable_timestamp,
             generate_routers=generate_routers,
             specify_tags=specify_tags,
+            gateway=gateway,
             route_class=route_class,
         )
     return generate_code(
@@ -89,6 +91,7 @@ def main(
         disable_timestamp=disable_timestamp,
         generate_routers=generate_routers,
         specify_tags=specify_tags,
+        gateway=gateway,
         route_class=route_class,
     )
 
@@ -114,6 +117,7 @@ def generate_code(
     disable_timestamp: bool = False,
     generate_routers: Optional[bool] = None,
     specify_tags: Optional[str] = None,
+    gateway: str | None = None,
     route_class: str | None = None,
 ) -> None:
     if not model_path:
@@ -209,10 +213,12 @@ def generate_code(
                     .exists()
                     or tag in tags
                 ):
-                    custom_vars = {
-                        "import_route_class": f"from gateway_tools import {route_class}",
-                        "add_route_class": f"route_class={route_class}",
-                    }
+                    custom_vars = dict()
+                    if gateway is not None and route_class is not None:
+                        custom_vars = {
+                            "import_route_class": f"from servicetoolkit.gateway_tools.{gateway} import {route_class}",
+                            "add_route_class": f"route_class={route_class}",
+                        }
                     template_vars = {**template_vars, **custom_vars}
                     template_vars["tag"] = tag.strip()
                     template = environment.get_template(str(relative_path))
